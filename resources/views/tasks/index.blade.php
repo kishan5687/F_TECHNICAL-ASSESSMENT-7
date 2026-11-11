@@ -37,6 +37,15 @@
     </style>
 </head>
 <body>
+
+    <!-- Paste goes here -->
+    <a href="{{ route('tasks.create') }}">+ Add New Task</a>
+
+    @if (session('success'))
+        <p style="color: green;">{{ session('success') }}</p>
+    @endif
+    <!-- End of paste -->
+
     <table>
         <thead>
             <tr>
