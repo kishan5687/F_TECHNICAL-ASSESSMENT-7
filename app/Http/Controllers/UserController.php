@@ -25,15 +25,19 @@ class UserController extends Controller
             'username'  => ['required', 'string', 'unique:users,username'],
             'full_name' => ['required', 'string'],
             'email'     => ['required', 'email', 'unique:users,email'],
+            'avatar'    => ['nullable', 'image', 'max:2048'],
         ]);
 
-        // Synchronize the old name column
         $validated['name'] = $validated['full_name'];
 
-        // Generate a random password automatically
         $validated['password'] = Str::random(16);
 
-        // Create the user account
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            $validated['avatar'] = $path;
+        }
+
         User::create($validated);
 
         return redirect()->route('users.index')
@@ -57,25 +61,19 @@ class UserController extends Controller
             'avatar'    => ['nullable', 'image', 'max:2048'],
         ]);
 
-        // Synchronize the old name column
         $validated['name'] = $validated['full_name'];
 
-        // Check if a new avatar was uploaded
         if ($request->hasFile('avatar')) {
 
-            // Delete the previous avatar if it exists
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            // Store the uploaded avatar
             $path = $request->file('avatar')->store('avatars', 'public');
 
-            // Save the avatar path in the database
             $validated['avatar'] = $path;
         }
 
-        // Update the user account
         $user->update($validated);
 
         return redirect()->route('users.index')
