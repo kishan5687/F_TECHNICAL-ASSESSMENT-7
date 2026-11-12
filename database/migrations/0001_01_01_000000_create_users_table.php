@@ -8,24 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->unique();
-            $table->string('full_name');
-
-            $table->string('name')->nullable()->change();
-            $table->string('email')->nullable()->change();
-            $table->string('password')->nullable()->change();
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['username', 'full_name']);
-
-            $table->string('name')->nullable(false)->change();
-            $table->string('email')->nullable(false)->change();
-            $table->string('password')->nullable(false)->change();
-        });
+        Schema::dropIfExists('users');
     }
 };
