@@ -66,6 +66,13 @@
             margin-bottom: 15px;
         }
 
+        .file-description {
+            color: #777777;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 18px;
+        }
+
         button {
             width: 100%;
             padding: 13px;
@@ -98,7 +105,7 @@
     <h2>Create New User Account</h2>
     <p class="subtitle">Enter the details to register a new user.</p>
 
-    <form action="{{ route('users.store') }}" method="POST">
+    <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <label for="username">Username</label>
@@ -140,6 +147,22 @@
         >
 
         @error('full_name')
+            <p class="error">{{ $message }}</p>
+        @enderror
+
+        <label for="avatar">Profile Picture</label>
+        <input
+            type="file"
+            id="avatar"
+            name="avatar"
+            accept="image/*"
+        >
+
+        <p class="file-description">
+            Accepted image formats. Maximum file size: 2MB.
+        </p>
+
+        @error('avatar')
             <p class="error">{{ $message }}</p>
         @enderror
 
